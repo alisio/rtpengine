@@ -5,7 +5,7 @@
 # @example
 #   include rtpengine::params
 class rtpengine::params {
-  $repo_install               = false
+  $repo_install               = true
   $rtpengine_dependencies     = [
     'epel-release',
     'ffmpeg',

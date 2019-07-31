@@ -1,62 +1,39 @@
 # rtpengine
 
-# as a non root user
-
-sudo yum -y install epel-release
-sudo yum -y install gcc make pkgconfig redhat-rpm-config rpm-build glib2-devel libcurl-devel pcre-devel
-sudo yum -y --enablerepo=updates install openssl-devel systemd-devel
-sudo yum -y install xmlrpc-c-devel zlib-devel hiredis-devel libpcap-devel libevent-devel json-glib-devel shadow-utils nc mysql-devel
-sudo yum localinstall -y --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm
-sudo yum -y install ffmpeg ffmpeg-libs ffmpeg-devel
-sudo yum -y install iptables iptables-ipv6 dkms iptables-devel gperf perl-generators perl-IPC-Cmd
-sudo yum -y --enablerepo=epel-testing install bcg729-devel
-sudo yum -y --enablerepo=updates install "kernel-devel-uname-r == $(uname -r)"
-sudo yum -y install kmodtool elfutils-libelf-devel
-
-mkdir -p ~/rpmbuild/{SOURCES,SPECS,BUILD,BUILDROOT,SRPMS}
-cd ~/rpmbuild/SPECS/
-wget https://github.com/sipwise/rtpengine/files/3155142/rtpengine.zip
-unzip rtpengine.zip
-cd -
-rpmbuild --undefine=_disable_source_fetch -ba ~/rpmbuild/SPECS/rtpengine.spec
-sudo yum install -y ~/rpmbuild/RPMS/x86_64/{rtpengine-7.3.1.1-0.el7.x86_64.rpm,rtpengine-kernel-7.3.1.1-0.el7.x86_64.rpm,rtpengine-recording-daemon-7.3.1.1-0.el7.x86_64.rpm}
-sudo yum install -y ~/rpmbuild/RPMS/noarch/rtpengine-firewalld-7.3.1.1-0.el7.noarch.rpm ~/rpmbuild/RPMS/noarch/rtpengine-dkms-7.3.1.1-0.el7.noarch.rpm
-
-
-Welcome to your new module. A short overview of the generated parts can be found in the PDK documentation at https://puppet.com/pdk/latest/pdk_generating_modules.html .
-
-The README template below provides a starting point with details about what information to include in your README.
-
 #### Table of Contents
 
 1. [Description](#description)
-2. [Setup - The basics of getting started with rtpengine](#setup)
+2. [Setup](#setup)
     * [What rtpengine affects](#what-rtpengine-affects)
     * [Setup requirements](#setup-requirements)
     * [Beginning with rtpengine](#beginning-with-rtpengine)
-3. [Usage - Configuration options and additional functionality](#usage)
-4. [Limitations - OS compatibility, etc.](#limitations)
-5. [Development - Guide for contributing to the module](#development)
+3. [Usage](#usage)
+4. [Limitations](#limitations)
+5. [Development](#development)
 
 ## Description
 
-Briefly tell users why they might want to use your module. Explain what your module does and what kind of problems users can solve with it.
+This module installs, configure and manages Sipwise NGCP rtpengine.
 
-This should be a fairly short description helps the user decide if your module is what they want.
+The Sipwise NGCP rtpengine is a proxy for RTP traffic and other UDP based media traffic. It's meant to be used with the Kamailio or OpenSIPS SIP proxy and forms a drop-in replacement for any of the other available RTP and media proxies.
+
+
+For more information please refer to the project repository: https://github.com/sipwise/rtpengine
+
 
 ## Setup
 
-### What rtpengine affects **OPTIONAL**
+### What rtpengine affects
 
-If it's obvious what your module touches, you can skip this section. For example, folks can probably figure out that your mysql_instance module affects their MySQL instances.
+This module affects the following:
 
-If there's more that they should know about, though, this is the place to mention:
-
-* Files, packages, services, or operations that the module will alter, impact, or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
+* Adds yum repositories for dependencies
+* Installs rtpengine and dependencies packages
+* Enables rtpengine service
 
 ### Setup Requirements **OPTIONAL**
+
+This module requires
 
 If your module requires anything extra before setting up (pluginsync enabled, another module, etc.), mention it here.
 
@@ -64,7 +41,37 @@ If your most recent release breaks compatibility or requires particular steps fo
 
 ### Beginning with rtpengine
 
-The very basic steps needed for a user to get the module up and running. This can include setup steps, if necessary, or it can be an example of the most basic use of the module.
+All you need to get this module up and running is calling the class:
+
+```
+include rtpengine
+```
+
+Parameters
+@repo_install
+  Boolean variable that controls if this module should config the required repositories. Default to true
+@rtpengine_ctrl_socket
+  String containing either just a port number, or an address:port pair, separated
+  by colon, of the control socket. Default to '127.0.0.1:22223'
+@rtpengine_listen_interface
+  Specifies a local network interface for listening to the RTP packets. Default to the Ip address of the first ethernet interface
+@rtpengine_min_port
+  Integer defining the minimum local port from which rtpengine will allocate UDP ports for media traffic relay.  Default to 30000.
+@rtpengine_max_port
+  Integer defining the maximum local port from which rtpengine will allocate UDP ports for media traffic relay.  Default to 40000.
+@rtpengine_max_sessions
+  Integer defining the limit the number of maximum concurrent sessions. Default to 16000
+@rtpengine_syslog_local
+
+
+```
+class{'rtpengine':
+  rtpengine_min_port => 10000,
+  rtpengine_max_port => 20000,
+  repo_install      => true  ,
+}
+```
+
 
 ## Usage
 
