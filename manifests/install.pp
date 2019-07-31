@@ -15,14 +15,14 @@ class rtpengine::install inherits rtpengine {
       gpgcheck => '0',
       baseurl  => 'http://alisio.com.br/alisio-repo/centos/7',
     }
-    if ! defined(Package["$rtpengine::rtpengine_dependencies"]) {
+    if ! defined(Package['$rtpengine::rtpengine_dependencies']) {
       package { $rtpengine::params::rtpengine_dependencies :
         ensure  => installed,
         require => Yumrepo['rpmfusion-free-updates'],
       }
     }
   } else {
-    if ! defined(Package["$rtpengine::rtpengine_dependencies"]) {
+    if ! defined(Package['$rtpengine::rtpengine_dependencies']) {
       package { $rtpengine::params::rtpengine_dependencies :
         ensure => installed,
       }
