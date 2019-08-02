@@ -1,6 +1,6 @@
 {
   "name": "alisio-rtpengine",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "author": "Antonio Alisio de Meneses Cordeiro",
   "summary": "This module installs, configure and manages Sipwise NGCP rtpengine.",
   "license": "Apache-2.0",

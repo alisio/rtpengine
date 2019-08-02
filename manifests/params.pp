@@ -11,7 +11,7 @@ class rtpengine::params {
     'ffmpeg',
     'rtpengine',
   ]
-  $rtpengine_ctrl_socket      = '127.0.0.1:22223'
+  $rtpengine_ctrl_socket      = '127.0.0.1:22222'
   $rtpengine_listen_interface = $facts['ipaddress']
   $rtpengine_min_port         = 30000
   $rtpengine_max_port         = 40000
